@@ -2,14 +2,20 @@ package name.ealen;
 
 import com.alibaba.fastjson.JSONArray;
 import name.ealen.dao.AreaRepository;
+import name.ealen.dao.CustomerRepository;
+import name.ealen.dao.LinkManRepository;
 import name.ealen.entity.Area;
+import name.ealen.entity.Customer;
+import name.ealen.entity.LinkMan;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
+import java.beans.Transient;
 import java.util.List;
 
 /**
@@ -69,5 +75,27 @@ public class AreaRepositoryTest {
     public void findAllArea() {
         List<Area> areas = areaRepository.findAll();
 //        System.out.println(JSONArray.toJSONString(areas.get(0)));
+    }
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private LinkManRepository linkManRepository;
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void test1() {
+        Customer customer = new Customer();
+        customer.setCustName("百度");
+
+        LinkMan linkMan = new LinkMan();
+        linkMan.setLkmName("小李");
+
+        customer.getLinkManSet().add(linkMan);
+        customerRepository.save(customer);
+        linkManRepository.save(linkMan);
+
     }
 }
